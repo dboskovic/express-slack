@@ -1,6 +1,6 @@
 # Slack Express Middleware
 
-### Example
+### Usage
 ```js
 const {PORT, SCOPE, TOKEN, CLIENT_ID, CLIENT_SECRET} = process.env,
       slack = require('express-slack'),
