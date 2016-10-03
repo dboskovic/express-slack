@@ -115,7 +115,7 @@ Methods | Description
 [send](src/bot.js#L61) | Call any Slack API endpoint
 
 ### Data Store
-The store follows the same interface of a single [BotKit Store](https://github.com/howdyai/botkit#storing-information)
+A key/value store to maintain team/bot information and store custom setings. The store follows the same interface of a single [BotKit Store](https://github.com/howdyai/botkit#storing-information)
 ```js
 slack.store.all().then(results => {
   // list of all items
@@ -130,3 +130,46 @@ Methods | Description
 [get](src/filestore.js#L39) | Get a single record by id
 [all](src/filestore.js#L61) | Get all saved records
 [save](src/filestore.js#L50) | Save a record
+
+
+### Client
+The Slack client is a way to call the API outside of an event.
+```js
+let message = {
+  unfurl_links: true,
+  channel: 'C1QD223DS1',
+  token: 'xoxb-12345678900-ABCD1234567890',
+  text: "I am a test message http://slack.com",
+  attachments: [{
+    text: "And here's an attachment!"
+  }]
+}
+
+// send message to any Slack endpoint
+slack.send('chat.postMessage', message).then(data => {
+  // Success!
+});
+
+// respond to webhooks
+slack.send('https://hooks.slack.com/services/T0000/B000/XXXX', message);
+```
+
+#### Instances
+```js
+// create an instance with defaults
+let instance = slack.client({
+  unfurl_links: true,
+  channel: 'C1QD223DS1',
+  token: 'xoxb-12345678900-ABCD1234567890'  
+});
+
+let message = {
+  text: "I am a test message http://slack.com",
+  attachments: [{
+    text: "And here's an attachment!"
+  }]
+};
+
+// send message to any Slack endpoint
+instance.send('chat.postMessage', message);
+```
