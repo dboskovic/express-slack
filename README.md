@@ -44,7 +44,7 @@ app.use('/slack', slack({
 }));
 ```
 Argument | Description
----|---
+:---|:---
 **scope** | The [Slack OAuth scope](https://api.slack.com/docs/oauth-scopes) to request
 **client_id** | The [Slack OAuth Client Id](https://api.slack.com/docs/oauth) code
 **client_secret** | The [Slack OAuth Client Secret](https://api.slack.com/docs/oauth) code
@@ -70,7 +70,7 @@ slack.on('googlebot', '/test', 'slash_command', (payload, bot) => { });
 slack.on('*', (payload, bot) => { });
 ```
 Event | Description
----|---
+:---|:---
 ***** | All events
 **message** | All RTM events
 **slash_command** | All Slash Commands
@@ -108,7 +108,7 @@ slack.on('message', (payload, bot) => {
 });
 ```
 Methods | Description
----|---
+:---|:---
 [say](src/bot.js#L50) | Send a message
 [reply](src/bot.js#L22) | Send a public reply to the event
 [replyPrivate](src/bot.js#L41) | Send an ephemeral reply to the event
@@ -126,7 +126,7 @@ slack.store.get(id).then(record => {
 });
 ```
 Methods | Description
----|---
+:---|:---
 [get](src/filestore.js#L39) | Get a single record by id
 [all](src/filestore.js#L61) | Get all saved records
 [save](src/filestore.js#L50) | Save a record
