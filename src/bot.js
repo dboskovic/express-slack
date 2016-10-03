@@ -9,7 +9,7 @@ class Bot {
    */
   constructor(auth, payload) {
     this.token = auth.bot ? auth.bot.bot_access_token : auth.access_token;
-    this.client = client.instance({ token: this.token });
+    this.client = client.create({ token: this.token });
     this.payload = payload;
   }
 

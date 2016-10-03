@@ -17,12 +17,12 @@ class Client {
   }
 
   /**
-   * Create an instance of the TinySpeck adapter
+   * Create an instance of the Slack client
    *
-   * @param {Object} defaults - The default config for the instance
-   * @return {TinySpeck} A new instance of the TinySpeck adapter
+   * @param {object} defaults - The default message data
+   * @return {Client} A new instance of the Slack client
    */
-  instance(defaults) {
+  create(defaults) {
     let options = Object.assign({}, this.defaults, defaults);
     return new this.constructor(options);
   }
@@ -133,7 +133,7 @@ class Client {
       data: payload ,
       method: 'post',
       baseURL: 'https://slack.com/api/',
-      headers: { 'user-agent': 'TinySpeck' }
+      headers: { 'user-agent': 'express-slack' }
     });
 
     return new Promise((resolve, reject) => {

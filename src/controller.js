@@ -4,7 +4,6 @@ const FileStore = require('./filestore'),
       Bot = require('./bot');
 
 
-
 class Controller extends EventEmitter {
 
   /**
