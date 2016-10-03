@@ -27,6 +27,9 @@ app.listen(PORT, () => {
 
 ### Other Event Examples
 ```js
+// handle RTM messages
+slack.on('message', (msg, bot) => { });
+
 // handle all slash commands
 slack.on('slash_commands', (msg, bot) => { });
 
