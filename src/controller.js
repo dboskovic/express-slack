@@ -92,7 +92,11 @@ class Controller extends EventEmitter {
    */
   message(req, res) {
     res.send('');
-    this.store.get(req.body.team_id).then(auth => {
+
+    let {team_id, team} = req.body;
+    if (!team_id && team) team_id = team.id; // different team id locations
+
+    this.store.get(team_id).then(auth => {
       this.digest(auth, req.body);
     });
   }

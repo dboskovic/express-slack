@@ -16,8 +16,8 @@ function slack(settings) {
   let router = express.Router();
   controller = new Controller(settings);
 
+  // expose the data store
   slack.store = controller.store;
-
 
   // body parser for json
   router.use(bodyParser.urlencoded({ extended: false }));
@@ -37,7 +37,6 @@ function slack(settings) {
  * Event handler for incoming messages
  *
  * @param {mixed} names - Any number of event names to listen to. The last will be the callback
- * @return {TinySpeck} The TinySpeck adapter
  */
 slack.on = function(...names) {
   let callback = names.pop(); // support multiple events per callback

@@ -29,7 +29,7 @@ class Bot {
     }
     else if (channel_id) {
       message.channel = channel_id;
-      this.client.call(message);
+      this.send(message);
     }
   }
 
@@ -43,22 +43,23 @@ class Bot {
   }
 
   /**
-   * Post to API
-   *
-   * @param {string} endPoint - The api endpoint or method name to call
-   * @param {object} payload - The payload to send
-   */
-  call(endPoint, payload) {
-    return this.client.send(endPoint, payload);
-  }
-
-  /**
    * Send Message
    *
    * @param {object} message - The message to post
    */
   say(message) {
-    return this.client.send(message);
+    return this.send(message);
+  }
+
+  /**
+   * Send data to Slack's API
+   *
+   * @param {string} endPoint - The method name or url (optional - defaults to chat.postMessage)
+   * @param {object} args - The JSON payload to send
+   * @return {Promise} A promise with the API result
+   */
+  send(...args) {
+    return this.client.send(...args);
   }
 }
 
