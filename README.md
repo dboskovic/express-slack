@@ -7,6 +7,7 @@ const {PORT, SCOPE, TOKEN, CLIENT_ID, CLIENT_SECRET} = process.env,
       express = require('express'),      
       app = express();
 
+// the path for OAuth, slash commands, and event callbacks
 app.use('/slack', slack({
   scope: SCOPE,
   token: TOKEN,
