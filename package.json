@@ -1,7 +1,7 @@
 {
   "name": "express-slack",
   "author": "John Agan <johnagan@gmail.com>",
-  "description": "Express middleware to handle slack requests",
+  "description": "Express middleware to handle Slack requests",
   "homepage": "https://github.com/johnagan/express-slack",
   "version": "1.0.0",
   "main": "src/index.js",
