@@ -24,7 +24,7 @@ class Bot {
     if (typeof(message) === 'string') message = { text: message };
 
     if (ephemeral) {
-      if (response_url) this.call(response_url, message);
+      if (response_url) this.send(response_url, message);
       else console.error("Can't send a private message without a response_url");
     }
     else if (channel_id) {
