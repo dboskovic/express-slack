@@ -20,14 +20,15 @@ class Bot {
    * @param {boolean} ephemeral - Flag to make the message ephemeral (default to false)
    */
   reply(message, ephemeral) {
-    let {response_url, channel_id} = this.payload;
+    let {response_url, channel_id, channel} = this.payload;
     if (typeof(message) === 'string') message = { text: message };
 
     if (ephemeral) {
       if (response_url) this.send(response_url, message);
       else console.error("Can't send a private message without a response_url");
     }
-    else if (channel_id) {
+    else if (channel_id || channel) {
+      if (channel) channel_id = channel;
       message.channel = channel_id;
       this.send(message);
     }

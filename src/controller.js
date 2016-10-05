@@ -94,7 +94,7 @@ class Controller extends EventEmitter {
     res.send('');
 
     let {team_id, team} = req.body;
-    if (!team_id && team) team_id = team.id; // different team id locations
+    if (team) team_id = typeof(team) === 'string' ? team : team.id;
 
     this.store.get(team_id).then(auth => {
       this.digest(auth, req.body);
@@ -111,15 +111,9 @@ class Controller extends EventEmitter {
     let params = { token: bot.bot_access_token };
 
     client.rtm(params).then(ws => {
-      ws.on('open', () => {
-        // this.bots[team_id] = ws;
-        this.emit('connected', this);
-      });
-      ws.on('close', () => {
-        // delete this.bots[team_id];
-        this.emit('disconnected', this);
-      });
       ws.on('message', msg => this.digest(auth, msg));
+      ws.on('open', () => this.emit('connected', this));
+      ws.on('close', () => this.emit('disconnected', this));
     }).catch(console.error);
   }
 
