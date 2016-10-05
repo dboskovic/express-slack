@@ -119,7 +119,7 @@ class Controller extends EventEmitter {
         // delete this.bots[team_id];
         this.emit('disconnected', this);
       });
-      ws.on('message', this.digest.bind(this));
+      ws.on('message', msg => this.digest(auth, msg));
     }).catch(console.error);
   }
 
