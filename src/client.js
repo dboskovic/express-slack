@@ -14,6 +14,11 @@ class Client {
    */
   constructor(defaults) {    
     this.defaults = defaults || {}; // message defaults
+    
+    this.api = axios.create({
+      baseURL: 'https://slack.com/api/',
+      headers: { 'user-agent': 'express-slack' }
+    });
   }
 
   /**
@@ -56,12 +61,8 @@ class Client {
    * @return {WebSocket} A promise containing the WebSocket
    */
   rtm(options) {
-    return new Promise((resolve, reject) => {
-      this.send('rtm.start', options).then(res => {
-        let ws = new WebSocket(res.url);
-        resolve(ws);
-      }).catch(reject);
-    });
+    let res = r => Promise.resolve(new WebSocket(r.url));
+    return this.send('rtm.start', options).then(res);
   }
 
   /**
@@ -93,21 +94,27 @@ class Client {
   }
 
   /**
+   * Test Token
+   *
+   * @param {object} params - The authorization params
+   * @return {promise} A Promise containing the authorization results
+   */
+  test(params) {
+    let args = { token: params.access_token };
+    let res = info => Promise.resolve(Object.assign({}, info, auth));
+    return this.post('auth.test', args).then(res);
+  }
+
+  /**
    * Install App
    *
    * @param {object} params - The authorization params with code
    * @return {promise} A Promise containing the installation results
    */
   install(params) {
-    return new Promise((resolve, reject) => {
-      this.access(params).catch(reject).then(auth => {
-        let args = { token: auth.access_token };
-        this.post('auth.test', args).catch(reject).then(info => {
-          resolve(Object.assign({}, info, auth));
-        });
-      });
-    });
+    return this.access(params).then(test);
   }
+
 
   /**
    * POST data to Slack's API
@@ -128,20 +135,12 @@ class Client {
       payload = qs.stringify(payload);
     }
 
-    let req = axios({ 
-      url: endPoint,
-      data: payload ,
-      method: 'post',
-      baseURL: 'https://slack.com/api/',
-      headers: { 'user-agent': 'express-slack' }
-    });
+    let res = r => {
+      if (r.data.ok && r.data.ok === false) return Promise.reject(r.data);
+      else return Promise.resolve(r.data);
+    }
 
-    return new Promise((resolve, reject) => {
-      req.catch(reject).then(r => {
-        if (r.data.ok && r.data.ok === false) reject(r.data);
-        else resolve(r.data)
-      });
-    });
+    return this.api.post(endPoint, payload).then(res);
   }
 }
 

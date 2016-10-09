@@ -40,7 +40,7 @@ class Bot {
    * @param {object} message - The message to reply with
    */
   replyPrivate(message) {
-    this.reply(message, true);
+    return this.reply(message, true);
   }
 
   /**

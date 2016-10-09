@@ -23,10 +23,16 @@ function slack(settings) {
   router.use(bodyParser.urlencoded({ extended: false }));
   router.use(bodyParser.json());
 
-  // middleware
+  // auth middleware
   router.get('/', controller.oauth.bind(controller));
   router.post('/', controller.verification.bind(controller));
   router.post('/', controller.challenge.bind(controller));
+  
+  // custom middleware
+  if (settings.middleware && Array.isArray(settings.middleware))
+    settings.middleware.forEach(m => router.post('/', m.bind(slack)));
+
+  // process message
   router.post('/', controller.message.bind(controller));
 
   return router;
@@ -38,7 +44,7 @@ function slack(settings) {
  *
  * @param {mixed} names - Any number of event names to listen to. The last will be the callback
  */
-slack.on = function(...names) {
+slack.on = (...names) => {
   let callback = names.pop(); // support multiple events per callback
   names.forEach(name => controller.on(name, callback));
 }
@@ -50,7 +56,7 @@ slack.on = function(...names) {
  * @param {object} args - The default message data
  * @return {Client} A new instance of the Slack client
  */
-slack.client = (args) => client.create(args);
+slack.client = args => client.create(args);
 
 
 /**

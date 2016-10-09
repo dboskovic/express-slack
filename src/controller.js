@@ -25,7 +25,7 @@ class Controller extends EventEmitter {
     this.store.all().then(auths => {
       Object.keys(auths).forEach(team_id => {
         let auth = auths[team_id];
-        if (auth.bot) this.connect(auths[team_id]);
+        if (auth.bot) this.connect(auth);
       });
     });
   }
