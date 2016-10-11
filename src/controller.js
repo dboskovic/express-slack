@@ -59,8 +59,13 @@ class Controller extends EventEmitter {
    * @param {Response} res - The express response object
    */
   verification(req, res, next) {
+    let {body} = req
     let {token} = this.settings
-    if (!token || token === req.body.token) {
+
+    // message buttons
+    if (body.payload) body = JSON.parse(body.payload);
+    
+    if (!token || token === body.token) {
       this.emit('url_verification', true, req.body);
       next();
     } else {
