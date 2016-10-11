@@ -5,7 +5,6 @@ const FileStore = require('./filestore'),
 
 
 class Controller extends EventEmitter {
-
   /**
    * Constructor
    *
@@ -25,6 +24,7 @@ class Controller extends EventEmitter {
     this.store.all().then(auths => {
       Object.keys(auths).forEach(team_id => {
         let auth = auths[team_id];
+        console.log("STORE", auth)
         if (auth.bot) this.connect(auth);
       });
     });
@@ -41,7 +41,8 @@ class Controller extends EventEmitter {
     
     if (code) {
       let params = Object.assign({}, this.settings, { code: code });
-      client.install(params).catch(e => res.json(e)).then(info => {    
+      client.install(params).catch(res.send).then(info => {    
+        console.log(info);
         delete info.ok;
         this.store.save(info.team_id, info);
         res.redirect(info.url);
@@ -110,10 +111,12 @@ class Controller extends EventEmitter {
     let {team_id, bot} = auth;
     let params = { token: bot.bot_access_token };
 
-    client.rtm(params).then(ws => {
+    return client.rtm(params).then(ws => {
       ws.on('message', msg => this.digest(auth, msg));
       ws.on('open', () => this.emit('connected', this));
       ws.on('close', () => this.emit('disconnected', this));
+
+      return Promise.resolve(ws);
     }).catch(console.error);
   }
 

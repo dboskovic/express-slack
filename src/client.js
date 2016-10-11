@@ -99,10 +99,10 @@ class Client {
    * @param {object} params - The authorization params
    * @return {promise} A Promise containing the authorization results
    */
-  test(params) {
-    let args = { token: params.access_token };
+  test(auth) {
+    let params = { token: auth.access_token };
     let res = info => Promise.resolve(Object.assign({}, info, auth));
-    return this.post('auth.test', args).then(res);
+    return this.post('auth.test', params).then(res);
   }
 
   /**
@@ -112,7 +112,7 @@ class Client {
    * @return {promise} A Promise containing the installation results
    */
   install(params) {
-    return this.access(params).then(test);
+    return this.access(params).then(this.test.bind(this));
   }
 
 
@@ -135,7 +135,7 @@ class Client {
       payload = qs.stringify(payload);
     }
 
-    let res = r => {
+    let res = r => {      
       if (r.data.ok && r.data.ok === false) return Promise.reject(r.data);
       else return Promise.resolve(r.data);
     }
