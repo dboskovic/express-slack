@@ -24,13 +24,13 @@ class Bot {
     if (typeof(message) === 'string') message = { text: message };
 
     if (ephemeral) {
-      if (response_url) this.send(response_url, message);
+      if (response_url) return this.send(response_url, message);
       else console.error("Can't send a private message without a response_url");
     }
     else if (channel_id || channel) {
       if (channel) channel_id = channel;
       message.channel = channel_id;
-      this.send(message);
+      return this.send(message);
     }
   }
 

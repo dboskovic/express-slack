@@ -41,14 +41,12 @@ class Controller extends EventEmitter {
     if (code) {
       let params = Object.assign({}, this.settings, { code: code });
       client.install(params).catch(res.send).then(info => {    
-        console.log(info);
         delete info.ok;
         this.store.save(info.team_id, info);
         res.redirect(info.url);
       });
     } else {
       let url = client.authorizeUrl(this.settings);
-      console.log(url)
       res.redirect(url); // authorize
     }
   }
@@ -98,12 +96,14 @@ class Controller extends EventEmitter {
    */
   message(req, res) {
     res.send('');
+    let message = this.parse(req.body);
+    let payload = message.payload || message;
+    let {team_id, team} = payload;
 
-    let {team_id, team} = req.body;
     if (team) team_id = typeof(team) === 'string' ? team : team.id;
 
     this.store.get(team_id).then(auth => {
-      this.digest(auth, req.body);
+      this.digest(auth, payload);
     });
   }
 
@@ -132,9 +132,8 @@ class Controller extends EventEmitter {
    * @return {Message} The parsed message
    */
   digest(auth, message) {
-    message = this.parse(message);
     let bot = new Bot(auth, message);
-    let {event_ts, event, command, type, trigger_word, payload, team_id} = message;
+    let {event_ts, event, command, type, trigger_word, callback_id, team_id} = message;
 
     // wildcard
     this.emit('*', message, bot);
@@ -161,9 +160,9 @@ class Controller extends EventEmitter {
     }
 
     // notify message button triggered by callback_id
-    if (payload) {
-      this.emit('interactive_message', payload, bot);
-      this.emit(payload.callback_id, payload, bot);
+    if (callback_id) {
+      this.emit('interactive_message', message, bot);
+      this.emit(callback_id, message, bot);
     }
   }
 
