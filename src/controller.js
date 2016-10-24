@@ -48,6 +48,7 @@ class Controller extends EventEmitter {
       });
     } else {
       let url = client.authorizeUrl(this.settings);
+      console.log(url)
       res.redirect(url); // authorize
     }
   }
