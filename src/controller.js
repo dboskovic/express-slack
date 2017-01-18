@@ -61,9 +61,6 @@ class Controller extends EventEmitter {
     let {body} = req
     let {token} = this.settings
 
-    // message buttons
-    if (body.payload) body = JSON.parse(body.payload);
-    
     if (!token || token === body.token) {
       this.emit('url_verification', true, req.body);
       next();
@@ -96,14 +93,13 @@ class Controller extends EventEmitter {
    */
   message(req, res) {
     res.send('');
-    let message = this.parse(req.body);
-    let payload = message.payload || message;
-    let {team_id, team} = payload;
 
+    let message = this.parse(req.body);
+    let {team_id, team} = message;
     if (team) team_id = typeof(team) === 'string' ? team : team.id;
 
     this.store.get(team_id).then(auth => {
-      this.digest(auth, payload);
+      this.digest(auth, message);
     });
   }
 
@@ -180,7 +176,7 @@ class Controller extends EventEmitter {
     
     // message button payloads are JSON strings
     if (typeof message.payload === 'string') 
-      message.payload = JSON.parse(message.payload);
+      message = JSON.parse(message.payload);
     
     return message;
   }
