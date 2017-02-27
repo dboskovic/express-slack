@@ -61,6 +61,9 @@ class Controller extends EventEmitter {
     let {body} = req
     let {token} = this.settings
 
+    // message buttons
+    if (body.payload) body = JSON.parse(body.payload);
+
     if (!token || token === body.token) {
       this.emit('url_verification', true, req.body);
       next();
