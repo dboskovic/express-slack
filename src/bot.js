@@ -8,6 +8,7 @@ class Bot {
    * @param {object} payload - The message payload to use for context
    */
   constructor(auth, payload) {
+    this.auth = auth;
     this.token = auth.bot ? auth.bot.bot_access_token : auth.access_token;
     this.client = client.create({ token: this.token });
     this.payload = payload;
